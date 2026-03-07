@@ -1,7 +1,8 @@
 # CoShop Marketplace Platform
 
+---------
 CoShop is a marketplace platform designed to empower Small and Medium-sized Enterprises (SMEs) by providing them with an integrated online presence. The platform connects SMEs with consumers through business registration, inventory management, and geolocation-based discovery.
-
+---------
 ## Project Structure
 
 ```
@@ -277,4 +278,5 @@ See [docs/README.md](docs/README.md) for complete documentation index.
 MIT
 #   C o s h o p 
  
+
  
