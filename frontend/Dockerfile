@@ -1,6 +1,6 @@
 # -------------- Stage 1----------------------------
 # base Image
-FROM node:20-alpine
+FROM node:20-alpine AS builder
 
 # Working directory
 WORKDIR /app
@@ -14,5 +14,23 @@ RUN npm install --legacy-peer-deps
 # Frontend Build
 RUN npm run build
 
-# Run the application
-CMD ["npm","run","preview"]
+#........................Stage 1 END---------------------------------------
+
+#----------------------Stage 2 Start ---------------------------------
+
+# Light weight image for run the application
+FROM dhi.io/node:26 AS runner
+
+# Working Directory
+WORKDIR /app
+
+# Copying from builder to current stage 2
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/node_modules /app/node_modules
+COPY ./vite.config.js ./vite.config.js
+
+
+# To Run the application
+CMD ["node","./node_modules/.bin/vite", "preview", "--host", "0.0.0.0", "--port", "4173"]
+
+
