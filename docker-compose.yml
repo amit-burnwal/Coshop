@@ -1,0 +1,55 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "4173:4173"
+    networks:
+      - coshop-network
+  
+   
+  backend:
+    build:
+      context: ./backend
+    environment:
+      POSTGRES_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable"
+      PORT: "${PORT}"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://redis:6379      
+    ports:
+     - "5000:5000"
+    depends_on:
+       - database
+       - redis
+
+    networks:
+      -  coshop-network
+  
+  redis:
+    image: redis:7-alpine
+    container_name: coshop-redis
+    
+    networks:
+      - coshop-network
+
+   
+  database:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_DB: "${DB_NAME}"
+    volumes:
+      - pg-data:/var/lib/postgresql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - coshop-network
+
+volumes:
+  pg-data:
+
+networks:
+  coshop-network:
