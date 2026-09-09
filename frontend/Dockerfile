@@ -1,6 +1,6 @@
 # -------------- Stage 1----------------------------
 # base Image
-FROM node:20-alpine AS builder
+FROM dhi.io/node:26-dev AS build
 
 # Working directory
 WORKDIR /app
@@ -24,9 +24,10 @@ FROM dhi.io/node:26 AS runner
 # Working Directory
 WORKDIR /app
 
-# Copying from builder to current stage 2
+# Copying required files from builder to current stage 2
 COPY --from=builder /app/dist /app/dist
 COPY --from=builder /app/node_modules /app/node_modules
+COPY --from=builder /app/package*.json ./
 COPY ./vite.config.js ./vite.config.js
 
 

@@ -1,10 +1,13 @@
+#base image for node js
 FROM node:22-bookworm-slim
 
 WORKDIR /app
 
+# copy package.json && package-lock.json
 COPY package*.json ./
 
-RUN npm install --omit=dev
+# Run the dependencies 
+RUN npm ci  --omit=dev
 
 COPY . .
 
